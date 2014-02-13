@@ -9,6 +9,16 @@ import android.widget.TextView;
 public class MessageActivity extends Activity {
 
 	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if(requestCode == MainActivity.PICK_RESULT_REQUEST) {
+			resultCode = RESULT_OK;
+		}
+	}
+
+	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();

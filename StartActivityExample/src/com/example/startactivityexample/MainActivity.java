@@ -8,8 +8,20 @@ import android.view.View;
 import android.widget.EditText;
 
 public class MainActivity extends Activity {
-	final static String EXTRA_MESSAGE = "com.example.startactivityexample.fromWords";
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if(requestCode == PICK_RESULT_REQUEST) {
+			if(resultCode == RESULT_OK)
+				System.out.println("RESULT_OK returned");
+		}
+	}
 
+	final static String EXTRA_MESSAGE = "com.example.startactivityexample.fromWords";
+	final static int PICK_RESULT_REQUEST = 1;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,5 +49,8 @@ public class MainActivity extends Activity {
 	
 	public void startActivityAndGetResult(View view) {
 		// start activity and get the result
+		Intent intent = new Intent(this, MessageActivity.class);
+		intent.putExtra(EXTRA_MESSAGE, "会返回结果的窗口");
+		startActivityForResult(intent, PICK_RESULT_REQUEST);
 	}
 }

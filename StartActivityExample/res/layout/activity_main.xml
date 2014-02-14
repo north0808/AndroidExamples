@@ -36,4 +36,14 @@
         android:onClick="startActivity"
         android:text="启动另外的Activity窗口" />
 
+    <Button
+        android:id="@+id/buttonStartContactActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buttonStartActivityAndGetResult"
+        android:layout_below="@+id/buttonStartActivityAndGetResult"
+        android:layout_marginTop="22dp"
+        android:onClick="startActivityContact"
+        android:text="启动联系人Activity窗口" />
+
 </RelativeLayout>

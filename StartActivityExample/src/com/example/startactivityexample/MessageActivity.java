@@ -4,20 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
 
 public class MessageActivity extends Activity {
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		if(requestCode == MainActivity.PICK_RESULT_REQUEST) {
-			resultCode = RESULT_OK;
-		}
-	}
-
+	
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -74,5 +65,18 @@ public class MessageActivity extends Activity {
 		getMenuInflater().inflate(R.menu.message, menu);
 		return true;
 	}
+	
+	public void returnApple(View view) {
+		Intent intent = new Intent();  
+        intent.putExtra("return", "Apple");  
+        setResult(RESULT_OK, intent);  
+        finish(); 
+	}
 
+	public void returnOrange(View view) {
+		Intent intent = new Intent();  
+        intent.putExtra("return", "Orange");  
+        setResult(RESULT_OK, intent);  
+        finish(); 
+	}
 }

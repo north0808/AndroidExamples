@@ -24,6 +24,8 @@
         android:layout_alignBottom="@+id/buttonStartActivity"
         android:layout_alignLeft="@+id/buttonStartActivity"
         android:layout_marginBottom="64dp"
+        android:hint="type some words"
+        android:text="Hello, Activity :-)"
         android:ems="10" />
 
     <Button

@@ -1,9 +1,11 @@
 package com.example.startactivityexample;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.view.Menu;
@@ -12,7 +14,8 @@ import android.widget.EditText;
 
 public class MainActivity extends Activity {
 	
-	final static String EXTRA_MESSAGE = "com.example.startactivityexample.fromWords";
+	final static String EXTRA_MESSAGE = "fromWords";
+	final static String WANT_GET_RESULT = "getResult";
 	final static int PICK_RESULT_REQUEST = 1;
 	final static int PICK_CONTACT_REQUEST = 2;
 	
@@ -45,6 +48,12 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			ActionBar actionBar = getActionBar();
+			// make the app icon with button properties
+			actionBar.setHomeButtonEnabled(false);
+		}
 	}
 
 	@Override
@@ -62,6 +71,7 @@ public class MainActivity extends Activity {
 		EditText editText = (EditText)findViewById(R.id.textMessage);
 		String message = editText.getText().toString();
 		intent.putExtra(EXTRA_MESSAGE, message);
+		intent.putExtra(WANT_GET_RESULT, false);
 		
 		startActivity(intent);
 	}
@@ -70,6 +80,7 @@ public class MainActivity extends Activity {
 		// start activity and get the result
 		Intent intent = new Intent(this, MessageActivity.class);
 		intent.putExtra(EXTRA_MESSAGE, "会返回结果的窗口");
+		intent.putExtra(WANT_GET_RESULT, true);
 		startActivityForResult(intent, PICK_RESULT_REQUEST);
 	}
 	

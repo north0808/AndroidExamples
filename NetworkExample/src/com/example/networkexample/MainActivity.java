@@ -102,10 +102,20 @@ public class MainActivity extends Activity {
 	}
 	
 	public void checkNetworkOnline(View view) {
-		// 
-	}
-	
-	public void networkUsageHandler(View view) {
-		// 
+		ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI); 
+		
+		boolean isWifiConn = networkInfo.isConnected();
+		networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		
+		boolean isMobileConn = networkInfo.isConnected();
+		Log.w(TAG, "Wifi connected: " + isWifiConn);
+		Log.w(TAG, "Mobile connected: " + isMobileConn);
+		
+		// 当前活动的网络是否可用
+		connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+	    networkInfo = connMgr.getActiveNetworkInfo();
+	    boolean isEnable = (networkInfo != null && networkInfo.isConnected());
+	    Log.w(TAG, "ActiveNetwork " + networkInfo.getTypeName() + " " + isEnable);
 	}
 }

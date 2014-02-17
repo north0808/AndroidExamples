@@ -23,11 +23,4 @@
         android:text="检查网络类型和是否可用"
         android:onClick="checkNetworkOnline" />
 
-    <Button
-        android:id="@+id/buttonNetworkUsage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="网络使用情况"
-        android:onClick="networkUsageHandler" />
-
 </LinearLayout>

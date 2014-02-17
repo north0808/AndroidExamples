@@ -29,5 +29,16 @@
 		    <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
 		  </intent-filter>
 		</receiver>
+		<receiver android:name=".BatteryLevelReceiver">
+			<intent-filter>
+			  <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
+			  <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/>
+			</intent-filter>
+		</receiver>
+		<receiver android:name=".DockStatusReceiver">
+			<intent-filter>
+			  <action android:name="android.intent.action.ACTION_DOCK_EVENT"/>
+			</intent-filter>
+		</receiver>
     </application>
 </manifest>

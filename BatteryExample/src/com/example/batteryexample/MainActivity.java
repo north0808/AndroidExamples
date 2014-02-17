@@ -52,5 +52,21 @@ public class MainActivity extends Activity {
 		float batteryPct = level / (float)scale;
 		Log.w("BATTER_EXAMPLE", String.valueOf(batteryPct));
 	}
+	
+	public void dockStatus(View view) {
+		IntentFilter ifilter = new IntentFilter(Intent.ACTION_DOCK_EVENT);
+		Context context = getApplicationContext();
+		Intent dock = context.registerReceiver(null, ifilter);
+		
+		if(dock != null) {
+			int dockState = dock.getIntExtra(Intent.EXTRA_DOCK_STATE, -1);
+			boolean isDocked = (dockState == Intent.EXTRA_DOCK_STATE_UNDOCKED);
+		
+			boolean isCar = (dockState == Intent.EXTRA_DOCK_STATE_CAR);
+			boolean isDesk = (dockState == Intent.EXTRA_DOCK_STATE_DESK || 
+		                 dockState == Intent.EXTRA_DOCK_STATE_LE_DESK ||
+		                 dockState == Intent.EXTRA_DOCK_STATE_HE_DESK);
+		}
+	}
 
 }

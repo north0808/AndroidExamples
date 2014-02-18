@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/buttonSendText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发送文本"
+        android:onClick="sendText" />
+
+    <Button
+        android:id="@+id/buttonSendBinary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发送二进制数据"
+        android:onClick="sendBinary" />
+
+    <Button
+        android:id="@+id/buttonSendComplex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发送复合数据"
+        android:onClick="sendComplex" />
+
+</LinearLayout>

@@ -161,7 +161,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onSuccess() {
-            // WiFiDirectBroadcastReceiver将会通知我们。现在可以先忽略。
+            		// WiFiDirectBroadcastReceiver将会通知我们。现在可以先忽略。
             }
 
             @Override
@@ -170,21 +170,4 @@ public class MainActivity extends Activity {
             }
         });
     }
-    
-    private WifiP2pManager.ActionListener actionListener = new WifiP2pManager.ActionListener() {
-    		@Override
-        public void onConnectionInfoAvailable(final WifiP2pInfo info) {
-            // InetAddress在WifiP2pInfo结构体中。
-            InetAddress groupOwnerAddress = info.groupOwnerAddress.getHostAddress();
-
-            // 组群协商后，就可以确定群主。
-            if (info.groupFormed && info.isGroupOwner) {
-            		// 针对群主做某些任务
-            		// 一种常用的做法是，创建一个服务器线程并接收连接请求。
-            } else if (info.groupFormed) {
-            		// 其他设备都作为客户端。在这种情况下，你会希望创建一个客户端线程来连接群主。
-            }
-        }
-    };
-    
 }

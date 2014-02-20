@@ -211,11 +211,11 @@ public class MainActivity extends Activity {
 			Toast.makeText(getApplicationContext(),	"检测到2个以上端点", Toast.LENGTH_SHORT).show();
 		}
 		 
-	    	// 1 - OUT?
-	    	outEndpoint = usbInterface.getEndpoint(outIndex);
-	    
-	    	// 0 - IN?
-	    	inEndpoint = usbInterface.getEndpoint(inIndex);
+    	// 1 - OUT?
+    	outEndpoint = usbInterface.getEndpoint(outIndex);
+    
+    	// 0 - IN?
+    	inEndpoint = usbInterface.getEndpoint(inIndex);
 		
 		printEndpointRW(outEndpoint);
 		printEndpointRW(inEndpoint);

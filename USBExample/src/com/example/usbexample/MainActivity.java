@@ -206,7 +206,10 @@ public class MainActivity extends Activity {
 		
 		Log.w(TAG, "接口包含的节点数量:" + count);
 		
-		if(count >= 2) outIndex = 1; 
+		if(count >= 2) {
+			outIndex = 1;
+			Toast.makeText(getApplicationContext(),	"检测到2个以上端点", Toast.LENGTH_SHORT).show();
+		}
 		 
 	    	// 1 - OUT?
 	    	outEndpoint = usbInterface.getEndpoint(outIndex);
@@ -239,8 +242,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void getOutIn(View view) {
-		Entry entry = (Entry)mDeviceMap.entrySet().toArray()[0];
-		UsbDevice device = (UsbDevice)entry.getValue();
+		UsbDevice device = getFirstDevice();
 		
 		UsbDeviceConnection connection = mUsbManager.openDevice(device);
 		UsbEndpoint[] points = getOutInEndpoint(connection, device.getInterface(0));

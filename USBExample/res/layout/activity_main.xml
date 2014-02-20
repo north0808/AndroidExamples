@@ -24,6 +24,13 @@
         android:onClick="requestDeviceAllow" />
 
     <Button
+        android:id="@+id/buttonOutInEndpoint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="getOutIn"
+        android:text="获得输入输出点" />
+
+    <Button
         android:id="@+id/buttonOpenUsbDevice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,13 +50,6 @@
         android:layout_height="wrap_content"
         android:text="测试controlTransfer函数"
         android:onClick="testControlTransfer" />
-
-    <Button
-        android:id="@+id/buttonOutInEndpoint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="获得输入输出点"
-        android:onClick="getOutIn" />
 
     <Button
         android:id="@+id/buttonUsbRequest"

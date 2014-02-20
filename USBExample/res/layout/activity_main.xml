@@ -51,4 +51,11 @@
         android:text="获得输入输出点"
         android:onClick="getOutIn" />
 
+    <Button
+        android:id="@+id/buttonUsbRequest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="UsbRequest对象"
+        android:onClick="usbRequest" />
+
 </LinearLayout>

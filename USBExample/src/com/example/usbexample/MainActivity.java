@@ -189,4 +189,8 @@ public class MainActivity extends Activity {
 	public void testControlTransfer(View view) {
 		// 
 	}
+	
+	public void usbReqest(View view) {
+		// 
+	}
 }

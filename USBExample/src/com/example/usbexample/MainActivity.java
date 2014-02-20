@@ -14,6 +14,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
@@ -23,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private static String TAG = "USB_EXAMPLE";
@@ -59,11 +61,13 @@ public class MainActivity extends Activity {
 		mUsbManager = (UsbManager)getSystemService(Context.USB_SERVICE);
 		mDeviceMap = mUsbManager.getDeviceList();
 		
-		Log.w(TAG, "发现" + mDeviceMap.size() + "个USB设备");
+		String str = "发现" + mDeviceMap.size() + "个USB设备";
+		Log.w(TAG, str);
+		Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
 		
-		Iterator iter = mDeviceMap.entrySet().iterator();
+		Iterator<Entry<String, UsbDevice>> iter = mDeviceMap.entrySet().iterator();
 		while(iter.hasNext()) {
-			Map.Entry entry = (Map.Entry) iter.next();
+			Map.Entry<String, UsbDevice> entry = iter.next();
 			
 			Log.w(TAG, entry.getKey().toString());
 			Log.w(TAG, entry.getValue().toString());
@@ -108,14 +112,30 @@ public class MainActivity extends Activity {
 		Log.w(TAG, "usb设备节点的数据传输方向: " + usbEndpoint.getDirection());
 	}
 	
-	public void openUsbDevice(View view) {
+	private UsbDevice getFirstDevice() {
 		Set<Entry<String, UsbDevice>> entries = mDeviceMap.entrySet();
 		List<Entry<String, UsbDevice>> list = new ArrayList<Entry<String, UsbDevice>>(entries);
 		UsbDevice device = list.get(0).getValue();
 		
+		return device;
+	}
+	
+	public void openUsbDevice(View view) {
+		UsbDevice device = getFirstDevice();
+		
 		if(device != null) {
 			mUsbManager.requestPermission(device, mPermissionIntent);
 			sendData(device);
+		} else {
+			Log.e(TAG, "device NULL");
+		}
+	}
+	
+	public void requestDeviceAllow(View view) {
+		UsbDevice device = getFirstDevice();
+		
+		if(device != null) {
+			mUsbManager.requestPermission(device, mPermissionIntent);
 		} else {
 			Log.e(TAG, "device NULL");
 		}
@@ -157,6 +177,7 @@ public class MainActivity extends Activity {
 		if(connection != null) {
 			connection.claimInterface(usbInterface, forceClaim);
 			
+			// max 16384 = 16 bytes
 			int length = connection.bulkTransfer(usbEndpoint, bytes, bytes.length, timeout);
 			Log.w(TAG, length + "length bytes sent");
 			
@@ -175,28 +196,47 @@ public class MainActivity extends Activity {
 		registerReceiver(usbReceiver, filter);
 	}
 	
-	private UsbEndpoint[] getOutInEndpoint(UsbDeviceConnection connection, UsbInterface intf) {
+	private UsbEndpoint[] getOutInEndpoint(UsbDeviceConnection connection, UsbInterface usbInterface) {
 		UsbEndpoint outEndpoint = null;
 		UsbEndpoint inEndpoint = null;
 		
-		int count = intf.getEndpointCount();
+		int count = usbInterface.getEndpointCount();
+		int outIndex = 0;
+		int inIndex = 0;
 		
 		Log.w(TAG, "接口包含的节点数量:" + count);
 		
-		if(count >= 2) {
-			if (intf.getEndpoint(1) != null) { 
-		    		// 1 - OUT
-		    		outEndpoint = intf.getEndpoint(1);
-		    }
-		}
+		if(count >= 2) outIndex = 1; 
+		 
+	    	// 1 - OUT?
+	    	outEndpoint = usbInterface.getEndpoint(outIndex);
 	    
-	    if (intf.getEndpoint(0) != null) {
-	    		// 0 - IN
-	    		inEndpoint = intf.getEndpoint(0);
-	    }
+	    	// 0 - IN?
+	    	inEndpoint = usbInterface.getEndpoint(inIndex);
+		
+		printEndpointRW(outEndpoint);
+		printEndpointRW(inEndpoint);
 	    
 	    return new UsbEndpoint[] {outEndpoint, inEndpoint};
 	} 
+	
+	private void printEndpointRW(UsbEndpoint point) {
+		if(point == null) return;
+		
+		if(point.getType() == UsbConstants.USB_ENDPOINT_XFER_INT) {
+			// 中断传输
+			if(point.getDirection() == UsbConstants.USB_DIR_IN) {
+				// device-to-host endpoint
+				Log.w(TAG, "detect READ point");
+				Toast.makeText(getApplicationContext(), "detect READ point", Toast.LENGTH_SHORT).show();
+			}
+			
+			if (point.getDirection() == UsbConstants.USB_DIR_OUT) {
+				Log.w(TAG, "detect WRITE point");
+				Toast.makeText(getApplicationContext(), "detect WRITE point", Toast.LENGTH_LONG).show();
+			}
+		}
+	}
 	
 	public void getOutIn(View view) {
 		Entry entry = (Entry)mDeviceMap.entrySet().toArray()[0];

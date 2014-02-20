@@ -15,6 +15,13 @@
         android:layout_height="wrap_content"
         android:text="枚举USB设备"
         android:onClick="usbManager" />
+    
+    <Button
+        android:id="@+id/buttonRequestPermission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="请求设备授权"
+        android:onClick="requestDeviceAllow" />
 
     <Button
         android:id="@+id/buttonOpenUsbDevice"

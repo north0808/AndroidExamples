@@ -17,13 +17,6 @@
         android:onClick="usbManager" />
 
     <Button
-        android:id="@+id/buttonStartDetect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="开始检测"
-        android:onClick="startDetect" />
-
-    <Button
         android:id="@+id/buttonOpenUsbDevice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

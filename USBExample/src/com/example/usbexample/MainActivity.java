@@ -1,9 +1,12 @@
 package com.example.usbexample;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -25,6 +28,14 @@ public class MainActivity extends Activity {
 	private static String TAG = "USB_EXAMPLE";
 	private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+		unregisterReceiver(usbReceiver);
+	}
+
 	PendingIntent mPermissionIntent;
 	UsbManager mUsbManager;
 	HashMap<String, UsbDevice> mDeviceMap;
@@ -33,6 +44,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		startDetect();
 	}
 
 	@Override
@@ -57,6 +70,8 @@ public class MainActivity extends Activity {
 			
 			Boolean hasPermission = mUsbManager.hasPermission((UsbDevice)entry.getValue());
 			Log.w(TAG, "has permission?" + hasPermission);
+			
+			printUsbDevice((UsbDevice)entry.getValue());
 		}
 	}
 	
@@ -70,7 +85,9 @@ public class MainActivity extends Activity {
 		Log.w(TAG, "usb设备的产品ID: " + usbDevice.getProductId());
 		Log.w(TAG, "usb设备的接口数量: " + usbDevice.getInterfaceCount());
 		
-		printUsbInterface(usbDevice.getInterface(0));
+		for(int k = 0; k < usbDevice.getInterfaceCount(); k++) {
+			printUsbInterface(usbDevice.getInterface(k));
+		}
 	}
 	
 	private void printUsbInterface(UsbInterface usbInterface) {
@@ -80,7 +97,9 @@ public class MainActivity extends Activity {
 		Log.w(TAG, "usb设备接口的节点数量: " + usbInterface.getEndpointCount());
 		Log.w(TAG, "usb设备接口的ID号: " + usbInterface.getId());
 		
-		printUsbEndpoint(usbInterface.getEndpoint(0));
+		for(int k = 0; k < usbInterface.getEndpointCount(); k++) {
+			printUsbEndpoint(usbInterface.getEndpoint(k));
+		}
 	}
 	
 	private void printUsbEndpoint(UsbEndpoint usbEndpoint) {
@@ -90,8 +109,9 @@ public class MainActivity extends Activity {
 	}
 	
 	public void openUsbDevice(View view) {
-		Entry entry = (Entry)mDeviceMap.entrySet().toArray()[0];
-		UsbDevice device = (UsbDevice)entry.getValue();
+		Set<Entry<String, UsbDevice>> entries = mDeviceMap.entrySet();
+		List<Entry<String, UsbDevice>> list = new ArrayList<Entry<String, UsbDevice>>(entries);
+		UsbDevice device = list.get(0).getValue();
 		
 		if(device != null) {
 			mUsbManager.requestPermission(device, mPermissionIntent);
@@ -149,7 +169,7 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	public void startDetect(View view) {	
+	private void startDetect() {	
 		mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
 		IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
 		registerReceiver(usbReceiver, filter);
@@ -159,10 +179,16 @@ public class MainActivity extends Activity {
 		UsbEndpoint outEndpoint = null;
 		UsbEndpoint inEndpoint = null;
 		
-		if (intf.getEndpoint(1) != null) { 
-	    		// 1 - OUT
-	    		outEndpoint = intf.getEndpoint(1);
-	    }
+		int count = intf.getEndpointCount();
+		
+		Log.w(TAG, "接口包含的节点数量:" + count);
+		
+		if(count >= 2) {
+			if (intf.getEndpoint(1) != null) { 
+		    		// 1 - OUT
+		    		outEndpoint = intf.getEndpoint(1);
+		    }
+		}
 	    
 	    if (intf.getEndpoint(0) != null) {
 	    		// 0 - IN

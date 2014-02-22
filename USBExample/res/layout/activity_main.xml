@@ -31,31 +31,17 @@
         android:text="获得输入输出点" />
 
     <Button
-        android:id="@+id/buttonOpenUsbDevice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="打开USB连接发送数据"
-        android:onClick="openUsbDevice" />
-
-    <Button
         android:id="@+id/buttonBulkTransfer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="测试bulkTransfer函数"
+        android:text="读取版本号"
         android:onClick="testBulkTransfer" />
-
+    
     <Button
-        android:id="@+id/buttonControlTransfer"
+        android:id="@+id/buttonReadBuffer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="测试controlTransfer函数"
-        android:onClick="testControlTransfer" />
-
-    <Button
-        android:id="@+id/buttonUsbRequest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="UsbRequest对象"
-        android:onClick="usbRequest" />
+        android:text="读取0x35缓存区20个字节"
+        android:onClick="testReadBuffer" />
 
 </LinearLayout>

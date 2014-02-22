@@ -3,4 +3,5 @@
 <resources>
 	<!-- 三星的测试机器 -->
     <usb-device vendor-id="5401" product-id="1091" />
+    <usb-device vendor-id="10182" product-id="2" />
 </resources>

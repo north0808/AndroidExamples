@@ -30,8 +30,11 @@ public class MainActivity extends Activity {
 	private static String TAG = "USB_EXAMPLE";
 	private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 	
+	private int VENDOR_ID = 10182;
+	private int PRODUCT_ID = 2;
+	
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy() { 
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		
@@ -41,6 +44,8 @@ public class MainActivity extends Activity {
 	PendingIntent mPermissionIntent;
 	UsbManager mUsbManager;
 	HashMap<String, UsbDevice> mDeviceMap;
+	UsbEndpoint mReadPoint, mWritePoint, mZeroPoint;
+	UsbInterface mUsbInterface;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +80,7 @@ public class MainActivity extends Activity {
 			Boolean hasPermission = mUsbManager.hasPermission((UsbDevice)entry.getValue());
 			Log.w(TAG, "has permission?" + hasPermission);
 			
-			printUsbDevice((UsbDevice)entry.getValue());
+			// printUsbDevice((UsbDevice)entry.getValue());
 		}
 	}
 	
@@ -89,55 +94,56 @@ public class MainActivity extends Activity {
 		Log.w(TAG, "usb设备的产品ID: " + usbDevice.getProductId());
 		Log.w(TAG, "usb设备的接口数量: " + usbDevice.getInterfaceCount());
 		
+		Log.w(TAG, "@@接口描述符信息: ");
 		for(int k = 0; k < usbDevice.getInterfaceCount(); k++) {
+			Log.w(TAG, "----------------------------------------");
+			Log.w(TAG, "第" + k + "个接口:");
 			printUsbInterface(usbDevice.getInterface(k));
 		}
 	}
 	
 	private void printUsbInterface(UsbInterface usbInterface) {
-		Log.w(TAG, "usb设备接口的ID号: " + usbInterface.getId());
-		Log.w(TAG, "usb设备接口的类别: " + usbInterface.getInterfaceClass());
-		Log.w(TAG, "usb设备接口的协议类别: " + usbInterface.getInterfaceProtocol());
-		Log.w(TAG, "usb设备接口的节点数量: " + usbInterface.getEndpointCount());
-		Log.w(TAG, "usb设备接口的ID号: " + usbInterface.getId());
+		Log.w(TAG, "接口的ID号: " + usbInterface.getId());
+		Log.w(TAG, "接口的类别: " + usbInterface.getInterfaceClass());
+		Log.w(TAG, "接口的协议类别: " + usbInterface.getInterfaceProtocol());
+		Log.w(TAG, "接口的节点数量: " + usbInterface.getEndpointCount());
+		Log.w(TAG, "接口的ID号: " + usbInterface.getId());
 		
+		Log.w(TAG, "----------------------------------------");
+		Log.w(TAG, "@@节点信息: ");
 		for(int k = 0; k < usbInterface.getEndpointCount(); k++) {
+			Log.w(TAG, "第" + k + "个节点:");
 			printUsbEndpoint(usbInterface.getEndpoint(k));
 		}
 	}
 	
 	private void printUsbEndpoint(UsbEndpoint usbEndpoint) {
-		Log.w(TAG, "usb设备节点的地址: " + usbEndpoint.getAddress());
-		Log.w(TAG, "usb设备节点的属性: " + usbEndpoint.getAttributes());
-		Log.w(TAG, "usb设备节点的数据传输方向: " + usbEndpoint.getDirection());
+		Log.w(TAG, "节点的地址: " + usbEndpoint.getAddress());
+		Log.w(TAG, "节点的属性: " + usbEndpoint.getAttributes());
+		Log.w(TAG, "节点的数据传输方向: " + usbEndpoint.getDirection());
 	}
 	
-	private UsbDevice getFirstDevice() {
+	private UsbDevice getRightDevice() {
 		Set<Entry<String, UsbDevice>> entries = mDeviceMap.entrySet();
 		List<Entry<String, UsbDevice>> list = new ArrayList<Entry<String, UsbDevice>>(entries);
-		UsbDevice device = list.get(0).getValue();
 		
-		return device;
-	}
-	
-	public void openUsbDevice(View view) {
-		UsbDevice device = getFirstDevice();
-		
-		if(device != null) {
-			mUsbManager.requestPermission(device, mPermissionIntent);
-			sendData(device);
-		} else {
-			Log.e(TAG, "device NULL");
+		for(int k =0; k < list.size(); k++) {
+			UsbDevice device = list.get(k).getValue();
+			
+			if(device.getVendorId() == VENDOR_ID && 
+					device.getProductId() == PRODUCT_ID) {
+				return device;
+			}
 		}
-	}
-	
-	public void requestDeviceAllow(View view) {
-		UsbDevice device = getFirstDevice();
 		
-		if(device != null) {
+		return null;
+	}
+		
+	public void requestDeviceAllow(View view) {
+		UsbDevice device = getRightDevice();
+		
+		if(device != null && !mUsbManager.hasPermission(device)) {
 			mUsbManager.requestPermission(device, mPermissionIntent);
-		} else {
-			Log.e(TAG, "device NULL");
 		}
 	}
 	
@@ -153,8 +159,8 @@ public class MainActivity extends Activity {
 					
 					if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
 						if(device != null) {
-							mUsbManager.requestPermission(device, mPermissionIntent);
-							sendData(device);
+							if(!mUsbManager.hasPermission(device))
+								mUsbManager.requestPermission(device, mPermissionIntent);
 						} else {
 							Log.e(TAG, "device NULL");
 						}
@@ -164,77 +170,27 @@ public class MainActivity extends Activity {
 		}
 	};
 	
-	private void sendData(UsbDevice device) {
-		UsbInterface usbInterface = device.getInterface(0);
-		UsbEndpoint usbEndpoint = usbInterface.getEndpoint(0);
-		
-		boolean forceClaim = true;
-		byte[] bytes = "hello usb".getBytes();
-		int timeout = 0;
-		
-		UsbDeviceConnection connection = mUsbManager.openDevice(device);
-		
-		if(connection != null) {
-			connection.claimInterface(usbInterface, forceClaim);
-			
-			// max 16384 = 16 bytes
-			int length = connection.bulkTransfer(usbEndpoint, bytes, bytes.length, timeout);
-			Log.w(TAG, length + "length bytes sent");
-			
-			if(-1 == length) {
-				Log.e(TAG, "send data failed");
-			}
-			
-			connection.releaseInterface(usbInterface);
-			connection.close();
-		}
-	}
-	
 	private void startDetect() {	
 		mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
 		IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
 		registerReceiver(usbReceiver, filter);
 	}
 	
-	private UsbEndpoint[] getOutInEndpoint(UsbDeviceConnection connection, UsbInterface usbInterface) {
-		UsbEndpoint outEndpoint = null;
-		UsbEndpoint inEndpoint = null;
-		
-		int count = usbInterface.getEndpointCount();
-		int outIndex = 0;
-		int inIndex = 0;
-		
-		Log.w(TAG, "接口包含的节点数量:" + count);
-		
-		if(count >= 2) {
-			outIndex = 1;
-			Toast.makeText(getApplicationContext(),	"检测到2个以上端点", Toast.LENGTH_SHORT).show();
-		}
-		 
-    	// 1 - OUT?
-    	outEndpoint = usbInterface.getEndpoint(outIndex);
-    
-    	// 0 - IN?
-    	inEndpoint = usbInterface.getEndpoint(inIndex);
-		
-		printEndpointRW(outEndpoint);
-		printEndpointRW(inEndpoint);
-	    
-	    return new UsbEndpoint[] {outEndpoint, inEndpoint};
-	} 
-	
-	private void printEndpointRW(UsbEndpoint point) {
+	private void setEndpointRW(UsbEndpoint point) {
 		if(point == null) return;
 		
 		if(point.getType() == UsbConstants.USB_ENDPOINT_XFER_INT) {
 			// 中断传输
 			if(point.getDirection() == UsbConstants.USB_DIR_IN) {
+				mReadPoint = point;
 				// device-to-host endpoint
 				Log.w(TAG, "detect READ point");
 				Toast.makeText(getApplicationContext(), "detect READ point", Toast.LENGTH_SHORT).show();
 			}
 			
 			if (point.getDirection() == UsbConstants.USB_DIR_OUT) {
+				mWritePoint = point;
+				
 				Log.w(TAG, "detect WRITE point");
 				Toast.makeText(getApplicationContext(), "detect WRITE point", Toast.LENGTH_LONG).show();
 			}
@@ -242,23 +198,72 @@ public class MainActivity extends Activity {
 	}
 	
 	public void getOutIn(View view) {
-		UsbDevice device = getFirstDevice();
+		UsbDevice device = getRightDevice();
 		
-		UsbDeviceConnection connection = mUsbManager.openDevice(device);
-		UsbEndpoint[] points = getOutInEndpoint(connection, device.getInterface(0));
+		printUsbDevice(device);
 		
-		Log.w(TAG, "points = " + points.toString());
+		mZeroPoint = device.getInterface(0).getEndpoint(0);
+		
+		mUsbInterface = device.getInterface(device.getInterfaceCount() <= 1 ? 0 : 1);
+		int pointCount = mUsbInterface.getEndpointCount();
+		
+		for(int k = 0; k < pointCount; k++) {
+			setEndpointRW(mUsbInterface.getEndpoint(k));
+		}
 	}
 	
 	public void testBulkTransfer(View view) {
-		// 
+		boolean forceClaim = true;
+		int timeout = 50;
+		byte[] data = null;
+		
+		UsbDevice device = getRightDevice();
+		UsbDeviceConnection connection = mUsbManager.openDevice(device);
+		
+		if(connection != null) {
+			connection.claimInterface(mUsbInterface, forceClaim);
+			
+			// max 16384 = 16 bytes
+			data = new byte[64];
+			byte[] cmd = Tools.HexString2Bytes("08000000");
+			System.arraycopy(data, 0, cmd, 0, cmd.length);
+			
+			int length = connection.bulkTransfer(mWritePoint, data, data.length, timeout);
+			Log.w(TAG, length + "length bytes sent");
+			
+			data = new byte[64];
+			connection.bulkTransfer(mReadPoint, data, data.length, timeout);
+			Log.w(TAG, "版本数据: " + Tools.Bytes2HexString(data));
+			
+			connection.releaseInterface(mUsbInterface);
+			connection.close(); 
+		}
 	}
 	
-	public void testControlTransfer(View view) {
-		// 
-	}
-	
-	public void usbReqest(View view) {
-		// 
+	public void testReadBuffer(View view) {
+		boolean forceClaim = true;
+		int timeout = 50;
+		byte[] data = null;
+		
+		UsbDevice device = getRightDevice();
+		UsbDeviceConnection connection = mUsbManager.openDevice(device);
+		
+		if(connection != null) {
+			connection.claimInterface(mUsbInterface, forceClaim);
+			
+			// max 16384 = 16 bytes
+			data = new byte[64];
+			byte[] cmd = Tools.HexString2Bytes("220000050100350014");
+			System.arraycopy(data, 0, cmd, 0, cmd.length); 
+			
+			int length = connection.bulkTransfer(mWritePoint, data, data.length, timeout);
+			Log.w(TAG, length + "length bytes sent");
+			
+			data = new byte[64];
+			connection.bulkTransfer(mReadPoint, data, data.length, timeout);
+			Log.w(TAG, "缓冲区数据: " + Tools.Bytes2HexString(data));
+			connection.releaseInterface(mUsbInterface);
+			connection.close();
+		}
 	}
 }

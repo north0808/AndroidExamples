@@ -212,7 +212,7 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	public void testBulkTransfer(View view) {
+	public void testReadVersion(View view) {
 		boolean forceClaim = true;
 		int timeout = 50;
 		byte[] data = null;
@@ -234,6 +234,8 @@ public class MainActivity extends Activity {
 			data = new byte[64];
 			connection.bulkTransfer(mReadPoint, data, data.length, timeout);
 			Log.w(TAG, "版本数据: " + Tools.Bytes2HexString(data));
+			
+			Toast.makeText(getApplicationContext(), Tools.Bytes2HexString(data), Toast.LENGTH_LONG).show();
 			
 			connection.releaseInterface(mUsbInterface);
 			connection.close(); 
@@ -262,6 +264,9 @@ public class MainActivity extends Activity {
 			data = new byte[64];
 			connection.bulkTransfer(mReadPoint, data, data.length, timeout);
 			Log.w(TAG, "缓冲区数据: " + Tools.Bytes2HexString(data));
+			
+			Toast.makeText(getApplicationContext(), Tools.Bytes2HexString(data), Toast.LENGTH_LONG).show();
+			
 			connection.releaseInterface(mUsbInterface);
 			connection.close();
 		}

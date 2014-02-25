@@ -1,15 +1,20 @@
 package com.example.toastexample;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	Handler handler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +52,25 @@ public class MainActivity extends Activity {
 	}
 	
 	public void customTotally(View view) {
-	    // 
+		LayoutInflater inflater = getLayoutInflater();
+		View layout = inflater.inflate(R.layout.activity_custom, (ViewGroup)findViewById(R.id.customLayout));
+		
+		Toast toast = new Toast(getApplicationContext());
+		toast.setGravity(Gravity.RIGHT | Gravity.TOP, 20, 100);
+		toast.setDuration(Toast.LENGTH_LONG);
+		toast.setView(layout);
+		toast.show();
 	}
 	
 	public void fromThread(View view) {
-		new Thread(new Runnable() {
+		// 使用handler投递UI更新
+		handler.post(new Runnable() {
 			
 			@Override
 			public void run() {
-				Toast.makeText(getApplicationContext(), "来自线程", Toast.LENGTH_SHORT).show();
+				// 可更新UI元素
+				MainActivity.this.setTitle("@@@新标题@@");
+				Toast.makeText(getApplicationContext(), "来自线程的提示", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

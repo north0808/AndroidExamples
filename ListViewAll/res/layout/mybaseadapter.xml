@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@+drawable/menu_select"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/edit_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <EditText
+            android:id="@+id/edittext1"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="4" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="发送" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/edit_button"
+        android:cacheColorHint="#00000000" >
+    </ListView>
+
+</RelativeLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+   <item type="id" name="sys_id">false</item>
+   <item type="id" name="table_id">false</item>
+   <item type="id" name="text_id">false</item>
+   <item type="id" name="table_layout">false</item>
+</resources>

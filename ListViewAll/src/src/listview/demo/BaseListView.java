@@ -20,12 +20,16 @@ public class BaseListView extends Activity {
 
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
 				BaseListView.this,
+				// 使用系统的
 				android.R.layout.simple_expandable_list_item_1, getData());
 		
 		lv.setAdapter(arrayAdapter);
+		
+		// 列表项的点击事件
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// 取得具体的项
 				final String str = (String)lv.getItemAtPosition(position);
 				Toast.makeText(BaseListView.this, "clicked " + position + ": " + str, Toast.LENGTH_SHORT).show();
 			}

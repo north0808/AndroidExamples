@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="70dp"
+    android:background="@drawable/s0_city_selector_history_changs_bg">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:gravity="center"
+        >
+            <TextView
+                android:id="@id/text_id"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:text="系统设置" 
+                android:gravity="center"
+                android:layout_weight="0.5">
+            </TextView>
+    </RelativeLayout>
+</RelativeLayout>

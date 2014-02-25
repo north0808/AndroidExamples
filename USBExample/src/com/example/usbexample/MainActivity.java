@@ -226,7 +226,7 @@ public class MainActivity extends Activity {
 			// max 16384 = 16 bytes
 			data = new byte[64];
 			byte[] cmd = Tools.HexString2Bytes("08000000");
-			System.arraycopy(data, 0, cmd, 0, cmd.length);
+			System.arraycopy(cmd, 0, data, 0, cmd.length);
 			
 			int length = connection.bulkTransfer(mWritePoint, data, data.length, timeout);
 			Log.w(TAG, length + "length bytes sent");
@@ -256,7 +256,7 @@ public class MainActivity extends Activity {
 			// max 16384 = 16 bytes
 			data = new byte[64];
 			byte[] cmd = Tools.HexString2Bytes("220000050100350014");
-			System.arraycopy(data, 0, cmd, 0, cmd.length); 
+			System.arraycopy(cmd, 0, data, 0, cmd.length); 
 			
 			int length = connection.bulkTransfer(mWritePoint, data, data.length, timeout);
 			Log.w(TAG, length + "length bytes sent");

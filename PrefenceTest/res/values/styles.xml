@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+<style name="CustomWindowTitleBackground">
+    <item name="android:background">#000</item>
+</style>
+
+<style name="CWindowBackground">
+    <item name="android:background">#fff</item>
+</style>
+
+<style name="test" parent="android:Theme">
+    <item name="android:windowTitleSize">50dp</item>
+    <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
+</style>
+
+<style name="textLarge" >
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/primary_text_light</item>
+</style>
+
+    <style name="textsmaill" >
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/primary_text_smaill_light</item>
+</style>
+    
+
+</resources>

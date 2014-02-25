@@ -116,5 +116,4 @@ public class MainActivity extends Activity {
 	    Intent settingsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 	    startActivity(settingsIntent);
 	}
-
 }

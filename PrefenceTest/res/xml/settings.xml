@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2008 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/app_name"
+    android:background="@drawable/s0_buddy_add_detail_bg">
+     <CheckBoxPreference
+            android:key="check1"
+            android:title="禁止横屏旋转"
+            android:persistent="false"
+            android:widgetLayout="@layout/chock"
+        />  
+    <Preference android:key="mac_address" 
+        android:dependency="check1"
+        android:title="手动校正重力感应方向"
+        android:summary="如果你的重力感应不准确，请点击这里"
+        />
+    <EditTextPreference
+            android:key="gateway"
+            android:title="更换皮肤"
+            android:summary="秋意绵绵"
+            android:persistent="false"
+            android:singleLine="true"
+            android:widgetLayout="@layout/spin"
+            />    
+    
+     <EditTextPreference
+            android:key="netmask"
+            android:title="更换字体"
+            android:summary="普通"
+            android:persistent="false"
+            android:singleLine="true"
+            android:widgetLayout="@layout/spin"
+            />    
+
+    <EditTextPreference
+            android:key="dns1"
+            android:title="股票设置"
+            android:persistent="false"
+            android:singleLine="true"
+            android:widgetLayout="@layout/spin"
+            />    
+    
+    <EditTextPreference
+            android:key="dns2"
+            android:title="流量设置"
+            android:persistent="false"
+            android:singleLine="true"
+            android:widgetLayout="@layout/spin"
+            />
+    <com.yt.prefence.MyPreferenveCatgory
+            android:title="QQ"
+            android:key="pcate"
+            />
+    
+    <CheckBoxPreference
+            android:key="use_static_ip"
+            android:title="开启声音提示"
+            android:persistent="false"
+            android:widgetLayout="@layout/chock"
+            />  
+            
+    <EditTextPreference
+            android:dependency="use_static_ip"
+            android:key="ip_address"
+            android:title="群消息接收"
+            android:summary="自定义设置"
+            android:persistent="false"
+            android:singleLine="true"
+            android:widgetLayout="@layout/spin"
+            />    
+
+    <CheckBoxPreference
+            android:key="b"
+            android:title="开启振动提示"
+            android:persistent="false"
+            android:widgetLayout="@layout/chock"
+            />    
+     <CheckBoxPreference
+            android:key="c"
+            android:title="自动接收图片"
+            android:persistent="false"
+            android:widgetLayout="@layout/chock"
+            />    
+     
+
+</PreferenceScreen>
